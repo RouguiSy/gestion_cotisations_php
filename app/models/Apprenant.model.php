@@ -129,3 +129,23 @@ function validateEmail($field, &$value, array &$errors) {
         $errors[] = "Le champ $field doit être un email valide.";
     }
 }
+
+// Fonctions d'auth
+function isLoggedIn() {
+    return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+}
+
+function requireLogin() {
+    if (!isLoggedIn()) {
+        header('Location: /gestion-cotis?controller=auth&action=login');
+        exit;
+    }
+}
+
+function requireRole($role) {
+    requireLogin();
+    if ($_SESSION['role'] !== $role) {
+        header('Location: /gestion-cotis?controller=' . $_SESSION['role'] . '&action=dashboard');
+        exit;
+    }
+}
